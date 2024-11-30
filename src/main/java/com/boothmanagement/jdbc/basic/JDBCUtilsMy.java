@@ -1,4 +1,4 @@
-package com.boothmanagement.util;
+package com.boothmanagement.jdbc.basic;
 
 import java.sql.*;
 import java.util.ArrayList;

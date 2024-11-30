@@ -1,4 +1,4 @@
-package com.boothmanagement.util;
+package com.boothmanagement.model;
 
 import lombok.Data;
 
