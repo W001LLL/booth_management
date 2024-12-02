@@ -114,7 +114,7 @@ function getJson() {
                             },
                             {
                                 "title": "登录-2",
-                                "href": "page/login-2.html",
+                                "href": "page/login.html",
                                 "icon": "fa fa-viacoin",
                                 "target": "_blank"
                             },

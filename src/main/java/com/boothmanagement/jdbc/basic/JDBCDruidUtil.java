@@ -3,7 +3,6 @@ package com.boothmanagement.jdbc.basic;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 
 import javax.sql.DataSource;
-import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,13 +22,17 @@ public class JDBCDruidUtil {
     static {
         try {
             Properties properties = new Properties();
-            properties.load(new FileInputStream("src/druid.properties"));  // 加载配置文件
-            ds = DruidDataSourceFactory.createDataSource(properties);      // 这里修正了静态变量的赋值
+            // 使用类加载器获取配置文件路径
+            System.out.println(JDBCDruidUtil.class.getClassLoader().getResource("druid.properties"));
+            properties.load(JDBCDruidUtil.class.getClassLoader().getResourceAsStream("druid.properties"));
+            ds = DruidDataSourceFactory.createDataSource(properties);
+            System.out.println("连接成功");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("加载配置文件失败");
         }
     }
+
 
     // 获取数据库连接
     public static Connection getConnection() {
