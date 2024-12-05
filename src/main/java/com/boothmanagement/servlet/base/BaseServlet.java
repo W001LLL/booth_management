@@ -25,6 +25,7 @@ public class BaseServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("------请求已进入BaseServlet中的service方法........");
+        req.setCharacterEncoding("UTF-8");
         String requestURL = req.getRequestURI();
         String methodName = URIUtils.getSuffixURL(requestURL);
         if(methodName!=null){
@@ -43,6 +44,7 @@ public class BaseServlet extends HttpServlet {
                     }
                     //如果继承BaseServlet的类中的方法的返回值是一个result结果集，则返回一个JSON格式的字符串给前端
                 }else if(value instanceof R){
+                    resp.setContentType("application/json;charset=UTF-8");
                     String jsonResult = JSON.toJSONString(value);
                     System.out.println("-----返回结果(JSON格式)："+jsonResult);
                     PrintWriter respWriter = resp.getWriter();

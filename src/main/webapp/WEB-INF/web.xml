@@ -4,6 +4,6 @@
 
 <web-app>
   <welcome-file-list>
-    <welcome-file>login-2.html</welcome-file>
+    <welcome-file>test.html</welcome-file>
   </welcome-file-list>
 </web-app>
