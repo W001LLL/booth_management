@@ -1,6 +1,7 @@
 package com.boothmanagement.dao;
 
 import com.boothmanagement.pojo.User;
+import com.boothmanagement.pojo.dto.UserQueryPage;
 
 import java.util.List;
 
@@ -13,5 +14,8 @@ import java.util.List;
  * Version: V1.0
  */
 public interface TestDao {
-    List<User> test();
+    List<User> test(UserQueryPage userQueryPage);
+    int testDelete(int id);
+    int testUpdate(User user);
+    long testCount(User user);
 }

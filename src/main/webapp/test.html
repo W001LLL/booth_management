@@ -5,25 +5,117 @@
     <title>测试</title>
 </head>
 <body>
-    <div id="app">
-        {{info}}
+<div id="app">
+    <input type="text" name="userName"  v-model="userName">
+    <input type="text" name="userPhone"  v-model="userPhone">
+    <input type="button" value="查询数据" @click="postRquest" />
+    <table border="1">
+        <thead>
+        <tr>
+            <th>用户id</th>
+            <th>用户名</th>
+            <th>用户密码</th>
+            <th>联系方式</th>
+            <th>电子邮箱</th>
+            <th>角色</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="user,index in listUser">
+            <td>{{index+1}}</td>
+            <td>{{user.userId}}</td>
+            <td>{{user.userName}}</td>
+            <td>
+                <button @click="showInfo(index)">修改</button>
+                <button @click="deleteById(user.userId)">删除</button></td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="update" >
+        <input type="text" name="userId" readonly  v-model="user.userId">
+        <input type="text" name="userName"  v-model="user.userName">
+        <input type="text" name="userPhone"  v-model="user.userPhone">
+        <input type="date" name="userEmail"  v-model="user.userEmail">
+        <input type="button" @click="updateInfo"  value="修改">
     </div>
-
+</div>
 <script src="/js/vue.min.js"></script>
 <script src="/js/axios.min.js"></script>
-<script type="text/javascript">
-    let vm = new Vue({
-        el: '#app',
-        data() {
-            return {
-                info: {
-
-                }
-            }
+<script>
+    var  app=new  Vue({
+        el:"#app",
+        data:{
+            userName:"",
+            userPhone:"",
+            listuser:[],
+            user:{}//修改参数
         },
-        mounted(){
-            axios.get('/tests/test').then(response=>(this.info=response.data));
+        created: async  function () {// 在数据data后 然后 页面渲染前
+            console.log(1);
+            await this.postRquest();//执行完毕之后再执行底下的代码 让代码同步执行  按顺序执行
+            console.log(this.listuser);
+            console.log(5);
+
+        },
+        methods:{
+            postRquest: async  function(){//  同步方法
+                console.log(2);
+                var vm=this;//当前vue对象
+                //Ajax的post请求
+                await   axios.post(
+                    "http://localhost:8080/user/test",//url
+                    {userName:this.userName,userPhone:this.userPhone}//参数
+                ).then(function(result){//请求成功后的响应
+                    console.log(result) ; //this -> axios对象
+                    if(result.status==200){
+                        app.listuser=  result.data.data;
+                        console.log(3);
+                    }else{
+                        alert("请求失败")
+                    }
+                });
+                console.log(4);
+            },
+            showInfo :function(index){
+                console.log(index);
+                console.log(this.listuser[index]);
+                this.user=this.listuser[index];
+            },
+            updateInfo:function(){
+                let  user=this.user;
+                //
+                axios.post(
+                    "http://localhost:8080/user/testUpdate",//url
+                    user//参数
+                ).then(function(result){//请求成功后的响应
+                    console.log(result) ; //this -> axios对象
+                    if(result.status==200){
+                        app.postRquest();//this
+                        console.log(3);
+                    }else{
+                        alert("请求失败")
+                    }
+                });
+            },
+            deleteById :function(id){
+                console.log(id);
+                axios.get(
+                    "http://localhost:8080/user/deleteById?userId="+id,//url
+                ).then(function(result){//请求成功后的响应
+                    console.log(result) ; //this -> axios对象
+                    if(result.status==200){
+                        app.postRquest();//this
+                        console.log(3);
+                    }else{
+                        alert("请求失败")
+                    }
+                });
+            }
+
+
         }
+
     });
 </script>
 </body>
