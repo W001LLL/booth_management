@@ -18,19 +18,37 @@ import java.util.Map;
 @WebServlet("/tests/*")
 public class TestServlet extends BaseServlet {
     public R test(HttpServletRequest request) {
-        System.out.println("-----------------------------------------------------");
-        String userUsername = request.getParameter("userUsername");
-        String userPhone = request.getParameter("userPhone");
-        System.out.println("userUsername = " + userUsername);
-        System.out.println("userPhone = " + userPhone);
+        String name = request.getParameter("userUsername");
+        System.out.println("name = " + name);
+        String phone = request.getParameter("userPhone");
+        System.out.println("phone = " + phone);
+        Integer page = Integer.valueOf( request.getParameter("page"));
+        System.out.println("page = " + page);
+        Integer limit = Integer.valueOf( request.getParameter("limit"));
+        System.out.println("limit = " + limit);
         Map<String, String[]> parameterMap = request.getParameterMap();
         UserQueryPage userQueryPage = new UserQueryPage();
+        userQueryPage.setUserUsername(name);
+        userQueryPage.setUserPhone(phone);
         try {
             BeanUtils.copyProperties(userQueryPage,parameterMap);
         } catch (IllegalAccessException | InvocationTargetException  e) {
             System.out.println("请求的参数与属性拷贝不成功");
         }
         TestService testService = new TestServiceImpl();
+        R r = testService.test(userQueryPage);
+        return r;
+    }
+    public R testVue(HttpServletRequest request){
+        User user = WebParameterUtils.receiveJsonToPojo(request, User.class);
+        String name = user.getUserUsername();
+        System.out.println("name = " + name);
+        String phone = user.getUserPhone();
+        System.out.println("phone = " + phone);
+        TestService testService = new TestServiceImpl();
+        UserQueryPage userQueryPage = new UserQueryPage();
+        userQueryPage.setUserUsername(name);
+        userQueryPage.setUserPhone(phone);
         R r = testService.test(userQueryPage);
         return r;
     }
@@ -45,5 +63,17 @@ public class TestServlet extends BaseServlet {
         System.out.println("user = " + user);
         TestService testService = new TestServiceImpl();
         return user != null ? R.ok("修改成功", testService.testUpdate(user)) : R.error("修改失败");
+    }
+    public R info(HttpServletRequest request){
+        String token = request.getParameter("token");
+        System.out.println("token = " + token);
+        String token1 = String.valueOf(request.getSession().getAttribute("token"));
+        if(token.equals(token1)){
+            Object admin = request.getSession().getAttribute("admin");
+            System.out.println(admin.toString());
+            return R.ok("登录成功",admin);
+        }else {
+            return R.ok("登录失败");
+        }
     }
 }

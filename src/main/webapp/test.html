@@ -101,7 +101,8 @@
             deleteById :function(id){
                 console.log(id);
                 axios.get(
-                    "http://localhost:8080/user/deleteById?userId="+id,//url
+                    "http://localhost:8080/user/deleteById",
+                    {params:{id:id}}//url
                 ).then(function(result){//请求成功后的响应
                     console.log(result) ; //this -> axios对象
                     if(result.status==200){
